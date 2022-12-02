@@ -16,6 +16,7 @@ import (
 
 var Input string
 
+// Solution functions to run for each day
 var dayFunctions = map[string]func(string) (int, int){
 	"day01": day01.Solve,
 	"day02": day02.Solve,
@@ -36,6 +37,12 @@ var rootCmd = &cobra.Command{
 }
 
 func runSolution(day string) error {
+	// Get solution function
+	solveFunc, ok := dayFunctions[day]
+	if !ok {
+		return errors.New("invalid day " + day)
+	}
+
 	// Default input file to input/<day>.txt
 	if Input == "" {
 		Input = path.Join("input", day+".txt")
@@ -48,7 +55,7 @@ func runSolution(day string) error {
 	}
 
 	// Run solution
-	sol1, sol2 := dayFunctions[day](string(data))
+	sol1, sol2 := solveFunc(string(data))
 	fmt.Printf("Part 1: %d\nPart 2: %d\n", sol1, sol2)
 
 	return nil
@@ -64,13 +71,5 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.advent-of-code-2022.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	rootCmd.Flags().StringVarP(&Input, "input", "i", "", "Input file path")
 }
