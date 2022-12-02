@@ -47,6 +47,10 @@ func Part2(input string) int {
 		i, _ := strconv.Atoi(line)
 		current_total += i
 	}
+	// Add the last total
+	if current_total != 0 {
+		totals = append(totals, current_total)
+	}
 
 	// Get top 3
 	sort.Sort(sort.Reverse(sort.IntSlice(totals)))

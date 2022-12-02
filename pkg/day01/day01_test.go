@@ -26,3 +26,12 @@ func TestPart01(t *testing.T) {
 		t.Errorf("Expected '%d', but got '%d'", want, got)
 	}
 }
+
+func TestPart02(t *testing.T) {
+	want := 45000
+	got := Part2(test_input)
+
+	if want != got {
+		t.Errorf("Expected '%d', but got '%d'", want, got)
+	}
+}
