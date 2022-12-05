@@ -19,7 +19,7 @@ import (
 var Input string
 
 // Solution functions to run for each day
-var dayFunctions = map[string]func(string) (int, int){
+var dayFunctions = map[string]func(string) (any, any){
 	"day01": day01.Solve,
 	"day02": day02.Solve,
 	"day03": day03.Solve,
@@ -60,7 +60,8 @@ func runSolution(day string) error {
 
 	// Run solution
 	sol1, sol2 := solveFunc(string(data))
-	fmt.Printf("Part 1: %d\nPart 2: %d\n", sol1, sol2)
+	fmt.Println("Part 1:", sol1)
+	fmt.Println("Part 2:", sol2)
 
 	return nil
 }

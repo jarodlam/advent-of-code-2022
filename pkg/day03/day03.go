@@ -94,6 +94,6 @@ func Part2(input string) int {
 	return total
 }
 
-func Solve(input string) (int, int) {
+func Solve(input string) (any, any) {
 	return Part1(input), Part2(input)
 }
