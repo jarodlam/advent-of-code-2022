@@ -13,6 +13,7 @@ import (
 	"github.com/jarodlam/advent-of-code-2022/pkg/day02"
 	"github.com/jarodlam/advent-of-code-2022/pkg/day03"
 	"github.com/jarodlam/advent-of-code-2022/pkg/day04"
+	"github.com/jarodlam/advent-of-code-2022/pkg/day05"
 	"github.com/spf13/cobra"
 )
 
@@ -24,6 +25,7 @@ var dayFunctions = map[string]func(string) (any, any){
 	"day02": day02.Solve,
 	"day03": day03.Solve,
 	"day04": day04.Solve,
+	"day05": day05.Solve,
 }
 
 // rootCmd represents the base command when called without any subcommands
