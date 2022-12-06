@@ -25,7 +25,7 @@ func initStacks(stackString string) []*list.List {
 	matches := re1.FindAllString(stackString, -1)
 	numStacks, _ := strconv.Atoi(matches[len(matches)-1])
 	stacks := make([]*list.List, numStacks)
-	for i, _ := range stacks {
+	for i := range stacks {
 		stacks[i] = list.New()
 	}
 
