@@ -13,7 +13,7 @@ move 2 from 2 to 1
 move 1 from 1 to 2
 `
 
-func TestPart01(t *testing.T) {
+func TestPart1(t *testing.T) {
 	want := "CMZ"
 	got := Part1(test_input)
 
@@ -22,7 +22,7 @@ func TestPart01(t *testing.T) {
 	}
 }
 
-func TestPart02(t *testing.T) {
+func TestPart2(t *testing.T) {
 	want := "MCD"
 	got := Part2(test_input)
 

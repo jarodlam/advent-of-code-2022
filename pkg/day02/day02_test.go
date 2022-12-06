@@ -7,7 +7,7 @@ B X
 C Z
 `
 
-func TestPart01(t *testing.T) {
+func TestPart1(t *testing.T) {
 	want := 15
 	got := Part1(test_input)
 
@@ -16,7 +16,7 @@ func TestPart01(t *testing.T) {
 	}
 }
 
-func TestPart02(t *testing.T) {
+func TestPart2(t *testing.T) {
 	want := 12
 	got := Part2(test_input)
 

@@ -18,7 +18,7 @@ var test_input = `1000
 10000
 `
 
-func TestPart01(t *testing.T) {
+func TestPart1(t *testing.T) {
 	want := 24000
 	got := Part1(test_input)
 
@@ -27,7 +27,7 @@ func TestPart01(t *testing.T) {
 	}
 }
 
-func TestPart02(t *testing.T) {
+func TestPart2(t *testing.T) {
 	want := 45000
 	got := Part2(test_input)
 

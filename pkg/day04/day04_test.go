@@ -10,7 +10,7 @@ var test_input = `2-4,6-8
 2-6,4-8
 `
 
-func TestPart01(t *testing.T) {
+func TestPart1(t *testing.T) {
 	want := 2
 	got := Part1(test_input)
 
@@ -19,7 +19,7 @@ func TestPart01(t *testing.T) {
 	}
 }
 
-func TestPart02(t *testing.T) {
+func TestPart2(t *testing.T) {
 	want := 4
 	got := Part2(test_input)
 
