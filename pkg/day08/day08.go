@@ -1,85 +1,14 @@
 package day08
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
 
-func scenicScore(y int, x int, forest [][]int, nrow int, ncol int) int {
-	scenicScore := 1
-	maxHeight := forest[y][x]
-	var dist int
-
-	// Look up
-	dist = 0
-	for i := y - 1; i >= 0; i-- {
-		val := forest[i][x]
-		dist++
-		if val >= maxHeight {
-			break
-		}
-	}
-	fmt.Printf("%d ", dist)
-	if dist == 0 {
-		return 0
-	}
-	scenicScore *= dist
-
-	// Look left
-	dist = 0
-	for i := x - 1; i >= 0; i-- {
-		val := forest[y][i]
-		dist++
-		if val >= maxHeight {
-			break
-		}
-	}
-	fmt.Printf("%d ", dist)
-	if dist == 0 {
-		return 0
-	}
-	scenicScore *= dist
-
-	// Look down
-	dist = 0
-	for i := y + 1; i < nrow; i++ {
-		val := forest[i][x]
-		dist++
-		if val >= maxHeight {
-			break
-		}
-	}
-	fmt.Printf("%d ", dist)
-	if dist == 0 {
-		return 0
-	}
-	scenicScore *= dist
-
-	// Look right
-	dist = 0
-	for i := x + 1; i < ncol; i++ {
-		val := forest[y][i]
-		dist++
-		if val >= maxHeight {
-			break
-		}
-	}
-	fmt.Printf("%d ", dist)
-	if dist == 0 {
-		return 0
-	}
-	scenicScore *= dist
-
-	return scenicScore
-}
-
-func Part1(input string) int {
+func populateForest(input string) ([][]int, [][]bool) {
 	forest := make([][]int, 0)
 	seen := make([][]bool, 0)
-	totalSeen := 0
 
-	// Populate forest
 	for _, row := range strings.Split(input, "\n") {
 		if len(row) == 0 {
 			continue
@@ -94,100 +23,91 @@ func Part1(input string) int {
 		seen = append(seen, make([]bool, len(newRow)))
 	}
 
+	return forest, seen
+}
+
+func scenicScore(y int, x int, forest [][]int, nrow int, ncol int) int {
+	scenicScore := 1
+	maxHeight := forest[y][x]
+	lookInDirection := func(start int, predicate func(int) bool, inc int, val func(int) int) int {
+		dist := 0
+		for i := start; predicate(i); i += inc {
+			dist++
+			if val(i) >= maxHeight {
+				break
+			}
+		}
+		return dist
+	}
+	predDec := func(i int) bool { return i >= 0 }
+	predIncRow := func(i int) bool { return i < nrow }
+	predIncCol := func(i int) bool { return i < ncol }
+	valX := func(i int) int { return forest[i][x] }
+	valY := func(i int) int { return forest[y][i] }
+
+	scenicScore *= lookInDirection(y-1, predDec, -1, valX)   // up
+	scenicScore *= lookInDirection(x-1, predDec, -1, valY)   // left
+	scenicScore *= lookInDirection(y+1, predIncRow, 1, valX) // down
+	scenicScore *= lookInDirection(x+1, predIncCol, 1, valY) // right
+
+	return scenicScore
+}
+
+func Part1(input string) int {
+	forest, seen := populateForest(input)
 	nrow := len(forest)
 	ncol := len(forest[0])
+	totalSeen := 0
 
-	for i := 0; i < nrow; i++ {
-		// Look at left side
-		maxHeight := -1
-		for j := 0; j < ncol; j++ {
-			if forest[i][j] > maxHeight {
-				// Tree is visible
-				maxHeight = forest[i][j]
-				if !seen[i][j] {
-					seen[i][j] = true
-					totalSeen++
-				}
-			}
+	checkTree := func(i int, j int, maxHeight int, cols bool) int {
+		if cols {
+			tmp := i
+			i = j
+			j = tmp
 		}
+		if forest[i][j] > maxHeight {
+			if !seen[i][j] {
+				seen[i][j] = true
+				totalSeen++
+			}
+			return forest[i][j]
+		}
+		return maxHeight
+	}
 
-		// Look at right side
-		maxHeight = -1
-		for j := ncol - 1; j >= 0; j-- {
-			if forest[i][j] > maxHeight {
-				// Tree is visible
-				maxHeight = forest[i][j]
-				if !seen[i][j] {
-					seen[i][j] = true
-					totalSeen++
-				}
+	lookInDirection := func(outerLim int, innerLim int, cols bool) {
+		for i := 0; i < outerLim; i++ {
+			maxHeight := -1
+			for j := 0; j < innerLim; j++ {
+				maxHeight = checkTree(i, j, maxHeight, cols)
+			}
+			maxHeight = -1
+			for j := innerLim - 1; j >= 0; j-- {
+				maxHeight = checkTree(i, j, maxHeight, cols)
 			}
 		}
 	}
 
-	for j := 0; j < ncol; j++ {
-		// Look at top side
-		maxHeight := -1
-		for i := 0; i < nrow; i++ {
-			if forest[i][j] > maxHeight {
-				// Tree is visible
-				maxHeight = forest[i][j]
-				if !seen[i][j] {
-					seen[i][j] = true
-					totalSeen++
-				}
-			}
-		}
-
-		// Look at right side
-		maxHeight = -1
-		for i := nrow - 1; i >= 0; i-- {
-			if forest[i][j] > maxHeight {
-				// Tree is visible
-				maxHeight = forest[i][j]
-				if !seen[i][j] {
-					seen[i][j] = true
-					totalSeen++
-				}
-			}
-		}
-	}
+	lookInDirection(nrow, ncol, false) // left/right
+	lookInDirection(ncol, nrow, true)  // top/bottom
 
 	return totalSeen
 }
 
 func Part2(input string) int {
-	forest := make([][]int, 0)
-
-	// Populate forest
-	for _, row := range strings.Split(input, "\n") {
-		if len(row) == 0 {
-			continue
-		}
-		rowSplit := strings.Split(row, "")
-		newRow := make([]int, 0)
-		for _, c := range rowSplit {
-			integer, _ := strconv.Atoi(c)
-			newRow = append(newRow, integer)
-		}
-		forest = append(forest, newRow)
-	}
-
+	forest, _ := populateForest(input)
 	nrow := len(forest)
 	ncol := len(forest[0])
 
-	// Scan trees
+	// Scan each tree
 	maxScore := 0
 	for i := 0; i < nrow; i++ {
 		for j := 0; j < ncol; j++ {
-			fmt.Printf("(%d, %d) %d: ", i, j, forest[i][j])
 			score := scenicScore(i, j, forest, nrow, ncol)
-			fmt.Printf(", %d\n", score)
 			if score > maxScore {
 				maxScore = score
 			}
 		}
-		fmt.Println()
 	}
 
 	return maxScore
